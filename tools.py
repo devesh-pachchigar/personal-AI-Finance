@@ -5,8 +5,7 @@ from langchain_core.tools import tool
 
 
 # Helper: convert amounts like "1 crore", "10 lakh", "₹90,000", "50k" into numbers.
-# We do this in Python (not the LLM) because LLMs sometimes add or drop a zero
-# when converting lakh/crore by themselves.
+# We do this in Python (not the LLM) because LLMs sometimes add or drop a zero when converting lakh/crore by themselves.
 
 UNIT_VALUES = {
     "crore": 10000000, "crores": 10000000, "cr": 10000000,
@@ -39,9 +38,8 @@ def parse_amount(value):
     return number * UNIT_VALUES[unit]
 
 
-# ---------------------------------------------------------------------------
 # Helper: format numbers the Indian way  ->  ₹10,00,000.00
-# ---------------------------------------------------------------------------
+
 def format_inr(amount):
     """Convert a number into Indian currency format, e.g. 1000000 -> ₹10,00,000.00"""
     negative = amount < 0
@@ -69,9 +67,8 @@ def format_inr(amount):
     return ("-" if negative else "") + f"₹{text}.{paise:02d}"
 
 
-# ===========================================================================
+
 # PART 1: Plain Python functions (the actual maths)
-# ===========================================================================
 
 def calculate_emi(loan_amount, annual_interest_rate, years):
     """
@@ -185,10 +182,10 @@ def safe_calculate(expression):
     return eval(cleaned, {"__builtins__": {}}, allowed_names)
 
 
-# ===========================================================================
-# PART 2: LangChain tools (wrappers the AI agent can call)
+
+# LangChain tools (wrappers the AI agent can call)
 # The docstring tells the LLM WHEN to use each tool.
-# ===========================================================================
+
 
 @tool
 def calculator(expression: str) -> str:
